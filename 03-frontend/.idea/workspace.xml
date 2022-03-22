@@ -209,6 +209,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="editor.config.ad.shown" value="true" />
@@ -259,12 +260,12 @@
       <workItem from="1647613700753" duration="1320000" />
       <workItem from="1647615108288" duration="3704000" />
       <workItem from="1647618903463" duration="3856000" />
-      <workItem from="1647856793188" duration="4398000" />
+      <workItem from="1647856793188" duration="5823000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13278000" />
+    <option name="totallyTimeSpent" value="14703000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3838" y="0" width="2326" height="1446" extended-state="0" />
