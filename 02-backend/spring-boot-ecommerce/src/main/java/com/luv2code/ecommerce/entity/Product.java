@@ -25,34 +25,27 @@ public class Product {
     private String sku;
 
     @Column(name = "name")
-    private String name_;
-
+    private String name;
 
     @Column(name = "description")
     private String description;
 
-
-    @Column(name = "unitPrice")
+    @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
-
-    @Column(name = "imageUrl")
+    @Column(name = "image_url")
     private String imageUrl;
-
 
     @Column(name = "active")
     private boolean active;
 
-
-    @Column(name = "unitsInStock")
+    @Column(name = "units_in_stock")
     private int unitsInStock;
 
-
-    @Column(name = "dateCreated")
+    @Column(name = "date_Created")
     private Date dateCreated;
 
-
-    @Column(name = "lastUpdated")
+    @Column(name = "last_updated")
     @UpdateTimestamp
     private Date  lastUpdated;
 
