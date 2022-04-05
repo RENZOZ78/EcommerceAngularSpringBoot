@@ -3,12 +3,19 @@
     <div class="container-fluid">
       <div class="row">
 
-        <!-- loop over the colleciton of products -->
+        <!-- loop over the collection of products -->
         <div *ngFor="let tempProduct of products" class="col-md-3">
 
-          <div class="product-box">
-            <img src="{{ tempProduct.imageUrl }}" class="img-responsive" alt="">
-            <h1>{{ tempProduct.name }}</h1>
+          <div class="product-box">    
+
+            <a routerLink="/products/{{ tempProduct.id }}" >
+              <img src="{{ tempProduct.imageUrl }}" class="img-responsive" alt="">
+            </a>
+
+            <a routerLink="/products/{{ tempProduct.id }}" >
+               <h1>{{ tempProduct.name }}</h1>
+            </a>            
+           
             <div class="price">{{ tempProduct.unitPrice | currency:'EUR'}}</div>
             <a href="#" class="primary-btn" >Ajouter au panier</a>
           </div>

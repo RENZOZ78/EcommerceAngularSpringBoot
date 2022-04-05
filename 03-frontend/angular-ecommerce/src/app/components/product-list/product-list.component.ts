@@ -6,10 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list-grid.component.html',
-  //templateUrl: './product-list-table.component.html',
-  // templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
+
+
 export class ProductListComponent implements OnInit {
 
   products!: Product[];
@@ -25,25 +25,25 @@ export class ProductListComponent implements OnInit {
     })
     
   }
-  listProducts() {
 
+  //affichage liste de produit
+  listProducts() {
     //prends en compte la recherche par keyword
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
-    //gere la listProduct
+    //si on est en searchMode, utilise la methode qui gere la recherche Product
     if (this.searchMode){
       this.handleSearchProducts();
     }
 
-    else{
-      this.handleListProducts
+    else{ //sinon methode qui gere la liste de produit
+      this.handleListProducts();
     } 
-    
 
   }
 
   handleSearchProducts(){
-
+    //check si le keyword tapé est avaible
     const theKeyword: string = this.route.snapshot.paramMap.get("keyword");
 
     //maintenant on cherche le produit qui utilise des keyword
@@ -55,7 +55,7 @@ export class ProductListComponent implements OnInit {
   }
 
   handleListProducts(){
-    //check if l'id parameter est avainble
+    //check if l'id parameter est avaible
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
