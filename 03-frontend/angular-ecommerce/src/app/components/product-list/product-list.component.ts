@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ProductService} from "../../services/product.service";
-import {Product} from "../../common/product";
+import { ProductService } from 'src/app/services/product.service';
+import { Product } from 'src/app/common/product';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,74 +8,120 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './product-list-grid.component.html',
   styleUrls: ['./product-list.component.css']
 })
-
-
 export class ProductListComponent implements OnInit {
 
-  products!: Product[];
-  currentCategoryId!: number;
-  searchMode!: boolean;
+  products: Product[] = [];
+  currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
+  searchMode: boolean = false;
+
+  // new properties for pagination
+  thePageNumber: number = 1;
+  thePageSize: number = 5;
+  theTotalElements: number = 0;
+
+  previousKeyword: string = null;
+
+  //miase a jour du pageSize
+
 
   constructor(private productService: ProductService,
-                private route: ActivatedRoute) {}
+              private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.route.paramMap.subscribe(() => {
       this.listProducts();
-    })
-    
+    });
   }
 
-  //affichage liste de produit
   listProducts() {
-    //prends en compte la recherche par keyword
+
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
 
-    //si on est en searchMode, utilise la methode qui gere la recherche Product
-    if (this.searchMode){
+    if (this.searchMode) {
       this.handleSearchProducts();
     }
-
-    else{ //sinon methode qui gere la liste de produit
+    else {
       this.handleListProducts();
-    } 
+    }
 
   }
 
-  handleSearchProducts(){
-    //check si le keyword tapé est avaible
-    const theKeyword: string = this.route.snapshot.paramMap.get("keyword");
+  handleSearchProducts() {
 
-    //maintenant on cherche le produit qui utilise des keyword
-    this.productService.searchProducts(theKeyword).subscribe(
-      data =>{
-        this.products = data;
-      }
-    );
+    const theKeyword: string = this.route.snapshot.paramMap.get('keyword');
+
+    //si on a un mot cle different que le précedant
+    //alors renvoi a la page 1
+    if(this.previousKeyword != theKeyword){
+      this.thePageNumber = 1;
+    }
+
+    this.previousKeyword = theKeyword;
+
+    console.log(`keyword=${theKeyword}, thePageNumber=${this.thePageNumber}`);
+
+
+    // now search for the products using keyword
+    // this.productService.searchProducts(theKeyword).subscribe(
+    //   data => {
+    //     this.products = data;
+    //   }
+    // )
+    this.productService.searchProductsPaginate(this.thePageNumber - 1,
+                                                this.thePageSize,
+                                              theKeyword).subscribe(this.processResult());
   }
 
-  handleListProducts(){
-    //check if l'id parameter est avaible
+  handleListProducts() {
+
+    // check if "id" parameter is available
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
-      //get the "id" param string /convertir le string a un nombre uen utilisant +
-    this.currentCategoryId =  Number(this.route.snapshot.paramMap.get('id'));
-    console.log('categorie personnalisée '+ this.currentCategoryId);
+      // get the "id" param string. convert string to a number using the "+" symbol
+      this.currentCategoryId = +this.route.snapshot.paramMap.get('id');
+    }
+    else {
+      // not category id available ... default to category id 1
+      this.currentCategoryId = 1;
     }
 
-    else{
-      //si l'id de categ n'est pas avaible... on met la categ 1 par default
-      this.currentCategoryId = 3;
-      console.log('default categorie'+this.currentCategoryId);
+    //
+    // Check if we have a different category than previous
+    // Note: Angular will reuse a component if it is currently being viewed
+    //
+
+    // if we have a different category id than previous
+    // then set thePageNumber back to 1
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.thePageNumber = 1;
     }
 
-    //now get the products for the given category id1
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      data =>{
-        this.products = data;
-      }
-    )
-    
+    this.previousCategoryId = this.currentCategoryId;
+
+    console.log(`currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`);
+
+    // now get the products for the given category id
+    this.productService.getProductListPaginate(this.thePageNumber - 1,
+                                               this.thePageSize,
+                                               this.currentCategoryId)
+                                               .subscribe(this.processResult());
   }
+
+  processResult() {
+    return data => {
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+    };
+  }
+
+  updatePageSize(pageSize: number){
+    this.thePageSize = pageSize;
+    this.thePageNumber= 1;
+    this.listProducts();
+  }
+
 }

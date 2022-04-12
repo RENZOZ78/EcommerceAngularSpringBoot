@@ -1,6 +1,7 @@
 package com.luv2code.ecommerce.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -8,14 +9,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "product")
+@Table(name="product")
 @Data
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -42,13 +43,11 @@ public class Product {
     @Column(name = "units_in_stock")
     private int unitsInStock;
 
-    @Column(name = "date_Created")
+    @Column(name = "date_created")
+    @CreationTimestamp
     private Date dateCreated;
 
     @Column(name = "last_updated")
     @UpdateTimestamp
-    private Date  lastUpdated;
-
-    
-
+    private Date lastUpdated;
 }
