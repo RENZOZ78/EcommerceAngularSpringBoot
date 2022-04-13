@@ -17,7 +17,7 @@
             </a>
 
             <div class="price">{{ tempProduct.unitPrice | currency:'EUR'}}</div>
-            <a href="#" class="primary-btn" >Ajouter au panier</a>
+            <button (click)="addToCart(tempProduct)" class="btn btn-primary btn-sm" >Ajouter au panier</button>
           </div>
         </div>
 
@@ -25,7 +25,6 @@
         <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12" role="alert" >
           Pas de produit trouvé
         </div>
-
 
       </div>
 
