@@ -7,6 +7,8 @@ import { CartItem } from '../common/cart-item';
 })
 export class CartService {
 
+  
+
   cartItems: CartItem[] = [];
 
   totalPrice: Subject<number> = new Subject<number>();
@@ -76,6 +78,29 @@ export class CartService {
       console.log('----');
 
     }
+
+    decrementQuantity(theCartItem: CartItem) {
+      theCartItem.quantity--;
+
+      if (theCartItem.quantity == 0){
+        this.remove(theCartItem);
+      }
+      else{
+        this.computeCartTotals();
+      }
+    }
+  remove(theCartItem: CartItem) {
+    
+    //chercher l'index de l'item dans le array
+    const itemIndex = this.cartItems.findIndex( tempCartItem => tempCartItem.id === theCartItem.id);
+
+    //si retrouvé, supprimer l'item du tableau pour l'index donné
+    if (itemIndex > -1) {
+      this.cartItems.splice(itemIndex, 1);
+
+      this.computeCartTotals();
+    }
+  }
 
 
   }
