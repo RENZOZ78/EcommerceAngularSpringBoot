@@ -1,0 +1,243 @@
+
+<div class="main-content">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+            <form  [formGroup]="checkoutFormGroup" (ngSubmit)="onSubmit()" >
+
+                <!-- formulaire client group -->
+                <div formGroupName="customer" class="form-area ">
+                    <h3>Client</h3>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label>Nom</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="firstName"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label >Prenom</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="lastName"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Email </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="email"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>             
+
+
+                <!-- formulaire livraison group -->
+                <div formGroupName="shippingAdress" class="form-area ">
+                    <h3>Adresse de livraison</h3>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label>Rue</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="street"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label >Ville</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="city"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Region </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="state"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Pays </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">                                
+                                <select formControlName="country"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Code postal </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="zipCode"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- check box qui copie les infs livraison vers les infs facturaion -->
+                <div class="input-space">
+                    <label class="au-checkbox">
+                        <input type="checkbox" (change)="copyShippingAdressToBillingAdress($event)" >
+                        <span class="au-checkmark"></span>L'adresse de facturation est la même que l'adresse de livraison
+                    </label>
+                </div>
+
+
+                 <!-- formulaire adresse de factureation  -->
+                 <div formGroupName="billingAdress" class="form-area ">
+                    <h3>Adresse de facturation</h3>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label>Rue</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="street"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label >Ville</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="city"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Region </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="state"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Pays </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">                                
+                                <select formControlName="country"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Code postal </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="zipCode"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- formulaire carte de credit  -->
+                <div formGroupName="creditCard" class="form-area ">
+                    <h3>Carte de credit</h3>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label>Carte de credit</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="cardType"  >
+                                    <option > Visa </option>
+                                    <option > Mastercard </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label >Numéro de carte</label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input formControlName="nameOncard"  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Code de sécurité </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="securityCode"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Mois d'expiration </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">                                
+                                <select formControlName="expirationMonth"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"> <label > Année d'expiration </label> </div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="expirationYear"  >
+                                    <option > TO DO </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- details de commande -->
+                <div class="form-area">
+                    <h3>Revoir votre commande</h3>
+
+                    <p>Quantité totale: {{totalQuantity}} </p>
+                    <p>Livraison: GRATUITE</p>
+                    <p>Total Prix: {{totalPrice | currency: 'EUR'}} </p>
+                    
+                </div>
+
+                <!-- bouton submit -->
+                <div class="text-center">
+                    <button class="btn btn-info " type="submit" >Commander</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
