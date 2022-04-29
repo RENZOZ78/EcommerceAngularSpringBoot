@@ -1,9 +1,10 @@
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
 import { SportManShopFormService } from 'src/app/services/sport-man-shop-form.service';
+import { SportManValidators } from 'src/app/validators/sport-man-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -21,44 +22,85 @@ export class CheckoutComponent implements OnInit {
 
   countries: Country[] = [];
 
-  shippingAdressStates: State[] = [];
-  billingAdressStates: State[] = [];
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
                     private sportManShopFormService: SportManShopFormService  ) { }
 
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
+
+      //regles pour le formulaire de controle
       customer: this.formBuilder.group({
-        firstName: [''],
-        lastName: [''],
-        email: ['']
-      }),
+        firstName: new FormControl('', 
+                                      [Validators.required, 
+                                        Validators.minLength(2),
+                                        SportManValidators.notOnlyWhitespace ]),
 
+        lastName: new FormControl('', [Validators.required, 
+                                        Validators.minLength(2),
+                                        SportManValidators.notOnlyWhitespace]),
+
+        email: new FormControl('',
+                                [Validators.required, 
+                                  Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
+      }),
+        //regles pour le formulaire de livraison
       shippingAddress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        country: [''],
-        zipCode: [''],
-      }),
+        street: new FormControl('', [Validators.required, 
+                                    Validators.minLength(2),
+                                    SportManValidators.notOnlyWhitespace]),
 
-      billingAdress: this.formBuilder.group({
-        street: [''],
-        city: [''],
-        state: [''],
-        country: [''],
-        zipCode: [''],
-      }),
+        city: new FormControl('', [Validators.required, 
+                                    Validators.minLength(2),
+                                    SportManValidators.notOnlyWhitespace]),
 
+        state: new FormControl('', [Validators.required]),
+
+        country: new FormControl('', [Validators.required]),
+
+        zipCode: new FormControl('', [Validators.required, 
+                                      Validators.minLength(5),
+                                      SportManValidators.notOnlyWhitespace]),
+      }),
+        //regle pour le formulaire  d'adresse de facturation
+      billingAddress: this.formBuilder.group({
+        street: new FormControl('', [Validators.required, 
+                                    Validators.minLength(2),
+                                    SportManValidators.notOnlyWhitespace]),
+
+        city: new FormControl('', [Validators.required, 
+                                  Validators.minLength(2),
+                                  SportManValidators.notOnlyWhitespace]),
+
+        state: new FormControl('', [Validators.required]),
+
+        country: new FormControl('', [Validators.required]),
+
+        zipCode: new FormControl('', [Validators.required, 
+                                      Validators.minLength(5),
+                                      SportManValidators.notOnlyWhitespace]),
+      }),
+        //regle pour le formulaire de carte de credirtt
       creditCard: this.formBuilder.group({
-        cardType: [''],
-        nameOnCard: [''],
-        cardNumber: [''],
-        securityCode: [''],
+        cardType: new FormControl('', [Validators.required]),
+
+        nameOnCard: new FormControl('', [Validators.required, 
+                                         Validators.minLength(2),
+                                          SportManValidators.notOnlyWhitespace]),
+                                          
+        cardNumber: new FormControl('', [Validators.required, 
+                                         Validators.pattern('[0-9]{16}')]),          
+
+        securityCode: new FormControl('', [Validators.required, 
+          Validators.pattern('[0-9]{3}')]),
+
         expirationMonth: [''],
+
         expirationYear: [''],
       }),
+
     });
 
     //remplir les mois actuelles
@@ -90,25 +132,64 @@ export class CheckoutComponent implements OnInit {
 
   }
 
-  // methode pour le checkout quand adresse livraison = adresse facturation
-  copyShippingAdressToBillingAdress(event){
+//methode getter qui permettent d'acceder aux  champs de formulaires
+
+  //formulaire infos client
+  get firstName() {return this.checkoutFormGroup.get('customer.firstName'); }
+  get lastName() {return this.checkoutFormGroup.get('customer.lastName'); }
+  get email() {return this.checkoutFormGroup.get('customer.email'); }
+
+    //formulaire de livriason
+  get shippingAddressStreet() {return this.checkoutFormGroup.get('shippingAddress.street'); }
+  get shippingAddressCity() {return this.checkoutFormGroup.get('shippingAddress.city'); }
+  get shippingAddressState() {return this.checkoutFormGroup.get('shippingAddress.state'); }
+  get shippingAddressZipCode() {return this.checkoutFormGroup.get('shippingAddress.zipCode');}
+  get shippingAddressCountry() {return this.checkoutFormGroup.get('shippingAddress.country'); }
+
+  //formulaire de facturation
+  get billingAddressStreet() {return this.checkoutFormGroup.get('billingAddress.street'); }
+  get billingAddressCity() {return this.checkoutFormGroup.get('billingAddress.city'); }
+  get billingAddressState() {return this.checkoutFormGroup.get('billingAddress.state'); }
+  get billingAddressZipCode() {return this.checkoutFormGroup.get('billingAddress.zipCode');}
+  get billingAddressCountry() {return this.checkoutFormGroup.get('billingAddress.country'); }
+
+  //formulaire de carte de credit
+  get creditCardType() {return this.checkoutFormGroup.get('creditCard.cardType'); }
+  get creditCardNameOnCard() {return this.checkoutFormGroup.get('creditCard.nameOnCard'); }
+  get creditCardNumber() {return this.checkoutFormGroup.get('creditCard.cardNumber'); }
+  get creditCardSecurityCode() {return this.checkoutFormGroup.get('creditCard.securityCode'); }
+
+
+
+
+
+  // methode pour le checkout quand Addresse livraison = Addresse facturation
+  copyShippingAddressToBillingAddress(event){
     if (event.target.checked){
-      this.checkoutFormGroup.controls['billingAdress']
+      this.checkoutFormGroup.controls['billingAddress']
       .setValue(this.checkoutFormGroup.controls['shippingAddress'].value);
 
       //bug fix for states
-      this.billingAdressStates = this.shippingAdressStates;
+      this.billingAddressStates = this.shippingAddressStates;
     }
     else{
-      this.checkoutFormGroup.controls['billingAdress'].reset();
+      this.checkoutFormGroup.controls['billingAddress'].reset();
 
       //bug fix for states
-      this.billingAdressStates = [];
+      this.billingAddressStates = [];
     }
   }
 
+  // methode qui gere les evenements quand on clic sur submit
   onSubmit(){
     console.log("gérer le bouton submit");
+
+    //methode qui check le status de la validation quand on appuis lsur le bouton submit  du formulaire
+    if (this.checkoutFormGroup.invalid){
+      this.checkoutFormGroup.markAllAsTouched();
+    }
+
+
     console.log(this.checkoutFormGroup.get('customer').value);
     console.log( "l'amail est: "+this.checkoutFormGroup.get('customer').value.email);
 
@@ -166,13 +247,13 @@ export class CheckoutComponent implements OnInit {
 
     this.sportManShopFormService.getStates(countryCode).subscribe(
       data =>{
-        //verifier si c'est l'adresse de livraison = de facturaiton, tu me donnes les données
+        //verifier si c'est l'Addresse de livraison = de facturaiton, tu me donnes les données
         if(formGroupName === 'shippingAddress') {
-          this.shippingAdressStates = data;
+          this.shippingAddressStates = data;
 
         }
         else{
-          this.billingAdressStates = data;
+          this.billingAddressStates = data;
         }
 
         //selecitonner le premier state par default
