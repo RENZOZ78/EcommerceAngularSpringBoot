@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
+import { CartService } from 'src/app/services/cart.service';
 import { SportManShopFormService } from 'src/app/services/sport-man-shop-form.service';
 import { SportManValidators } from 'src/app/validators/sport-man-validators';
 
@@ -26,9 +27,13 @@ export class CheckoutComponent implements OnInit {
   billingAddressStates: State[] = [];
 
   constructor(private formBuilder: FormBuilder,
-                    private sportManShopFormService: SportManShopFormService  ) { }
+              private sportManShopFormService: SportManShopFormService  ,
+              private cartService: CartService ) { }
 
   ngOnInit(): void {
+
+    this.reviewCartDetails();
+
     this.checkoutFormGroup = this.formBuilder.group({
 
       //regles pour le formulaire de controle
@@ -130,6 +135,18 @@ export class CheckoutComponent implements OnInit {
       }
     );
 
+  }
+  reviewCartDetails() {
+    
+    //subscribe a cartService.totalQuantity
+    this.cartService.totalQuantity.subscribe(
+      totalQuantity => this.totalQuantity = totalQuantity
+    );
+
+    //subscribe a cartSerivce.totalPrice
+      this.cartService.totalPrice.subscribe(
+        totalPrice => this.totalPrice = totalPrice
+      );
   }
 
 //methode getter qui permettent d'acceder aux  champs de formulaires
