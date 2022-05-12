@@ -1,9 +1,14 @@
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Country } from 'src/app/common/country';
+import { Order } from 'src/app/common/order';
+import { OrderItem } from 'src/app/common/order-item';
+import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
 import { SportManShopFormService } from 'src/app/services/sport-man-shop-form.service';
 import { SportManValidators } from 'src/app/validators/sport-man-validators';
 
@@ -28,7 +33,9 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private sportManShopFormService: SportManShopFormService  ,
-              private cartService: CartService ) { }
+              private cartService: CartService,
+              private checkoutService: CheckoutService,
+              private router: Router ) { }
 
   ngOnInit(): void {
 
@@ -204,15 +211,86 @@ export class CheckoutComponent implements OnInit {
     //methode qui check le status de la validation quand on appuis lsur le bouton submit  du formulaire
     if (this.checkoutFormGroup.invalid){
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
 
+    //organiser la commande
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
 
-    console.log(this.checkoutFormGroup.get('customer').value);
-    console.log( "l'amail est: "+this.checkoutFormGroup.get('customer').value.email);
+    //recuper le sitems cart
+    const cartItems = this.cartService.cartItems;
 
-    console.log( "le pays de livraison est: "+this.checkoutFormGroup.get('shippingAddress').value.country.name);
-    console.log( "la region de livraison est: "+this.checkoutFormGroup.get('shippingAddress').value.state.name);
+    //creer orderItems a partir de cartItems
+      //methode longue
+      // let orderItems: OrderItem[]=[];
+      // for(let i=0; cartItems.length; i++){
+      //   orderItems[i] = new OrderItem(cartItems[i]);
+      // }
 
+      //methode courte
+      let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
+
+    //lancer l'achat (purchase)=creer une instance de purchase
+    let purchase = new Purchase();
+    
+
+    //remplir client-purchase
+    purchase.customer = this.checkoutFormGroup.controls['customer'].value;
+
+    // remplir adresse de livraison purchase
+    purchase.shippingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    const shippingState: State = JSON.parse(JSON.stringify(purchase.shippingAddress.state));
+    const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
+    purchase.shippingAddress.state = shippingState.name;
+    purchase.shippingAddress.country = shippingCountry.name;
+
+
+    //remplir adresse de facturation purchase
+    purchase.billingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
+    const billingState: State = JSON.parse(JSON.stringify(purchase.billingAddress.state));
+    const billingCountry: Country = JSON.parse(JSON.stringify(purchase.billingAddress.country));
+    purchase.billingAddress.state =billingState.name;
+    purchase.billingAddress.country = billingCountry.name;
+
+    // remplir purchase order et orderItems
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+
+    //appeler REST API a partir des données qu'on a collecté, via CheckoutService
+    this.checkoutService.placeOrder(purchase).subscribe(
+      {
+        next: response =>{
+          alert(`Votre commande a été reçu.\n Numero de commande: ${response.orderTrackingNumber}`);
+          
+          // reinitialiser le panier, une fois que la commande est faite
+          this.resetCart();
+
+        },
+        error: err =>{
+          alert(`il y a une erreur: ${err.message}`);
+        }
+      }
+    );
+
+
+    // console.log(this.checkoutFormGroup.get('customer').value);
+    // console.log( "l'amail est: "+this.checkoutFormGroup.get('customer').value.email);
+
+    // console.log( "le pays de livraison est: "+this.checkoutFormGroup.get('shippingAddress').value.country.name);
+    // console.log( "la region de livraison est: "+this.checkoutFormGroup.get('shippingAddress').value.state.name);
+
+  }
+  resetCart() {
+    //reinitialiser les donnés du panier
+    this.checkoutFormGroup.reset();
+
+    //reinitialiser le formulaire
+    this.checkoutFormGroup.reset();
+
+    //renvoyer a la page des produits
+    this.router.navigateByUrl("/products");
   }
 
   //methode qui gere  les mois et le sannées
