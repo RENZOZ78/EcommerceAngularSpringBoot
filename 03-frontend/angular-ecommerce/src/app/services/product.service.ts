@@ -10,7 +10,11 @@ import { ProductCategory } from '../common/product-category';
 })
 export class ProductService {
 
-  private baseUrl = 'http://localhost:8080/api/products';
+  // local server-----------------------
+   private baseUrl = 'http://localhost:8080/api/products';
+
+  // aws server----------------------------
+  // private baseUrl = 'http://sportmanshop-env.eba-preexhbv.us-east-1.elasticbeanstalk.com//api/products';
 
   private categoryUrl = 'http://localhost:8080/api/product-category';
 

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: spring-boot-ecommerce
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: didie
+Implementation-Vendor-Id: com.luv2code
+Created-By: IntelliJ IDEA
+Build-Jdk: 17.0.1
+Main-Class: ${start-class}
+

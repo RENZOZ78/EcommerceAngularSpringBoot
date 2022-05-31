@@ -45,7 +45,7 @@ CREATE TABLE `orders` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `order_tracking_number` varchar(255) DEFAULT NULL,
   `total_price` decimal(19,2) DEFAULT NULL,
-  `total_quantity` int DEFAULT NULL,
+  ` cus` int DEFAULT NULL,
   `billing_address_id` bigint DEFAULT NULL,
   `customer_id` bigint DEFAULT NULL,
   `shipping_address_id` bigint DEFAULT NULL,

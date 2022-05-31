@@ -1,0 +1,50 @@
+/*
+    copier a parir de syles.css -> .au-btn.submit, puis rajouter ici
+    renommer  tel que .security-btn
+    changer les border a 10px
+*/
+
+.security-btn{
+    position:relative;
+    right:0;
+    min-width:95px;
+    color:#fff;
+    border:10px solid #205b8d;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:43px;
+    background:#205b8d
+}
+
+
+/*
+    copier a partir du styles.css -> .form-header
+    renommer en tant que .login-status-header
+*/
+.login-status-header{
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:flex
+}
+
+/*
+    copy from styles.css -> .au-input ln255
+    renommer en tant que .login-status-user-info
+    -enlever 'solid', 'font-size', 'color'
+*/
+.login-status-user-info{
+    line-height:43px;
+    border:1px ;
+    /* font-size:14px; */
+    /* color:#666; */
+    padding:0 17px;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    -webkit-transition:all .5s ease;
+    -o-transition:all .5s ease;
+    -moz-transition:all .5s ease;
+    transition:all .5s ease
+}
