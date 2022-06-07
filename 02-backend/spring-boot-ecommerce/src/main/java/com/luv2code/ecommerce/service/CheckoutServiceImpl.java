@@ -44,6 +44,14 @@ public class CheckoutServiceImpl implements  CheckoutService {
 
         //rempli les customeres avec l'order
         Customer customer = purchase.getCustomer();
+
+        //Verifie s'il ya un client existant grace a l'email
+        String theEmail = customer.getEmail();
+        Customer custormerFromDB = customerRepository.findByEmail(theEmail);
+        if (custormerFromDB != null ){
+            customer = custormerFromDB;
+        }
+
         customer.add(order);
 
         //savegarde dans le database
