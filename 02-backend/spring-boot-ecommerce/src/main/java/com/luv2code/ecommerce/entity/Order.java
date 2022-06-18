@@ -59,7 +59,7 @@ public class Order {
     @JoinColumn(name = "billing_address_id", referencedColumnName = "id")
     private Address billingAddress;
 
-    //function ajout
+    //FUNCTION AJOUT
     public void add(OrderItem item){
         if (item != null) {
             if (orderItems == null) {
