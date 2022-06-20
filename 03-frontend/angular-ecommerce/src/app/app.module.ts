@@ -31,6 +31,7 @@ import{
 
 import myAppConfig from './config/my-app-config';
 import { MembersPageComponent } from './components/members-page/members-page.component';
+import { OderHistoryComponent } from './components/oder-history/oder-history.component';
 
 
 
@@ -77,7 +78,8 @@ const routes: Routes = [
     CheckoutComponent,
     LoginComponent,
     LoginStatusComponent,
-    MembersPageComponent
+    MembersPageComponent,
+    OderHistoryComponent
   ],
 
   imports: [
