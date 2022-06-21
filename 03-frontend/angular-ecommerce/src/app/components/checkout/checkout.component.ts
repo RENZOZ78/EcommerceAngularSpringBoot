@@ -294,7 +294,11 @@ export class CheckoutComponent implements OnInit {
   //reinitialiser le panier-------------------------
   resetCart() {
     //reinitialiser les donnés du panier
-    this.checkoutFormGroup.reset();
+    //this.checkoutFormGroup.reset();
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+    
 
     //reinitialiser le formulaire
     this.checkoutFormGroup.reset();
