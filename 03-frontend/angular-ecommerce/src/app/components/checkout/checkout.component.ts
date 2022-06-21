@@ -32,6 +32,9 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
+  //session de stockage navigateur
+  storage: Storage = sessionStorage;
+
   constructor(private formBuilder: FormBuilder,
               private sportManShopFormService: SportManShopFormService  ,
               private cartService: CartService,
@@ -41,6 +44,9 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
 
     this.reviewCartDetails();
+
+    //lire l'email de l'user a aprtir du stockage navigateur
+    const theEmail= JSON.parse(this.storage.getItem('userEmail'));
 
     this.checkoutFormGroup = this.formBuilder.group({
 
@@ -55,7 +61,8 @@ export class CheckoutComponent implements OnInit {
                                         Validators.minLength(2),
                                         SportManValidators.notOnlyWhitespace]),
 
-        email: new FormControl('',
+         //the Email est la valeur initiale
+        email: new FormControl(theEmail,
                                 [Validators.required, 
                                   Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
       }),
