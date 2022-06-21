@@ -17,6 +17,7 @@ import { SportManValidators } from 'src/app/validators/sport-man-validators';
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
+
 export class CheckoutComponent implements OnInit {
 
   checkoutFormGroup: FormGroup;
@@ -282,6 +283,8 @@ export class CheckoutComponent implements OnInit {
     // console.log( "la region de livraison est: "+this.checkoutFormGroup.get('shippingAddress').value.state.name);
 
   }
+
+  //reinitialiser le panier-------------------------
   resetCart() {
     //reinitialiser les donnés du panier
     this.checkoutFormGroup.reset();
@@ -293,7 +296,7 @@ export class CheckoutComponent implements OnInit {
     this.router.navigateByUrl("/products");
   }
 
-  //methode qui gere  les mois et le sannées
+  //methode qui gere  les mois et le sannées-----------
   handleMonthsAndYears(){
 
     const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
@@ -321,7 +324,7 @@ export class CheckoutComponent implements OnInit {
 
   }
 
-  //methode qui change le state 
+  //methode qui change le state -----------
   getStates(formGroupName: string){
 
     const formGroup = this.checkoutFormGroup.get(formGroupName);

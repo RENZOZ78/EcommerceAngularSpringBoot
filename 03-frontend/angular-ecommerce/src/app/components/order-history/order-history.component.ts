@@ -3,11 +3,11 @@ import { OrderHistory } from 'src/app/common/order-history';
 import { OrderHistoryService } from 'src/app/services/order-history.service';
 
 @Component({
-  selector: 'app-oder-history',
-  templateUrl: './oder-history.component.html',
-  styleUrls: ['./oder-history.component.css']
+  selector: 'app-order-history',
+  templateUrl: './order-history.component.html',
+  styleUrls: ['./order-history.component.css']
 })
-export class OderHistoryComponent implements OnInit {
+export class OrderHistoryComponent implements OnInit {
 
 
   orderHistoryList: OrderHistory [] = [];
@@ -20,6 +20,7 @@ export class OderHistoryComponent implements OnInit {
   ngOnInit(): void {
     this.handleOrderHistory();
   }
+  
   handleOrderHistory() {
 
     //lire l'email de l'user a partir du stokage du navugateur;

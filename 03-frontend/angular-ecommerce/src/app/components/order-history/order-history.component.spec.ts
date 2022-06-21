@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OderHistoryComponent } from './oder-history.component';
+import { OrderHistoryComponent } from './order-history.component';
 
 describe('OderHistoryComponent', () => {
-  let component: OderHistoryComponent;
-  let fixture: ComponentFixture<OderHistoryComponent>;
+  let component: OrderHistoryComponent;
+  let fixture: ComponentFixture<OrderHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OderHistoryComponent ]
+      declarations: [ OrderHistoryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OderHistoryComponent);
+    fixture = TestBed.createComponent(OrderHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
