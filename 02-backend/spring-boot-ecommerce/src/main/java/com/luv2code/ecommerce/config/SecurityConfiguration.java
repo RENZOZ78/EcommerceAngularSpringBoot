@@ -1,5 +1,6 @@
 package com.luv2code.ecommerce.config;
 
+import com.okta.spring.boot.oauth.Okta;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -8,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        //super.configure(http);
 
         //proteger point de terminaison  /api/orders
         http.authorizeRequests()
@@ -20,6 +21,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         //add CORS filters
         http.cors();
+
+        //ecrit une reponse non vide 401
+        Okta.configureResourceServer401ResponseBody(http);
 
     }
 }
