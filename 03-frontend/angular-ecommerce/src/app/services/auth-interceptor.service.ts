@@ -1,16 +1,17 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Inject } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { OktaAuthStateService } from '@okta/okta-angular';
+import {  OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 // import { format } from 'path';
-import { from, Observable } from 'rxjs';
+import { from, lastValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthInterceptorService implements HttpInterceptor {
 
-  constructor(private oktaAuth: OktaAuth) { }
+  constructor(@Inject(OKTA_AUTH) private oktaAuth: OktaAuth) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
    return from(this.handleAcess(request, next));    
   }
@@ -18,7 +19,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   private async handleAcess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
    
     //rajouter  un access token pour un point securisé
-    const securedEndpoints = ['htp://localhost:8080/api/orders'];
+    const securedEndpoints = ['http://localhost:8080/api/orders'];
 
     if (securedEndpoints.some(url => request.urlWithParams.includes(url))) {
 
@@ -33,7 +34,10 @@ export class AuthInterceptorService implements HttpInterceptor {
       });
     }
 
-    return next.handle(request).toPromise();
+    // return next.handle(request).toPromise(); 
+    //toPromise est deprecié
+    return await lastValueFrom(next.handle(request));
+
 
   }
 }
