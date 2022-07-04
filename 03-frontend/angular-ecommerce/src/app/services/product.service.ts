@@ -4,6 +4,7 @@ import { Product } from '../common/product';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProductCategory } from '../common/product-category';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,14 @@ import { ProductCategory } from '../common/product-category';
 export class ProductService {
 
   // local server-----------------------
-   private baseUrl = 'http://localhost:8080/api/products';
+  //  private baseUrl = 'http://localhost:8080/api/products';
+   private baseUrl = environment.sportmanApiUrl + '/products';
 
   // aws server----------------------------
   // private baseUrl = 'http://sportmanshop-env.eba-preexhbv.us-east-1.elasticbeanstalk.com//api/products';
 
-  private categoryUrl = 'http://localhost:8080/api/product-category';
+  // private categoryUrl = 'http://localhost:8080/api/product-category';
+  private categoryUrl = environment.sportmanApiUrl + '/product-category';
 
   constructor(private httpClient: HttpClient) { }
 

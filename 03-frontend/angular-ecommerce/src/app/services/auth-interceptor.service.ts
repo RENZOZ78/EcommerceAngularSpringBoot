@@ -5,6 +5,7 @@ import {  OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 // import { format } from 'path';
 import { from, lastValueFrom, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,9 @@ export class AuthInterceptorService implements HttpInterceptor {
   private async handleAcess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
    
     //rajouter  un access token pour un point securisé
-    const securedEndpoints = ['http://localhost:8080/api/orders'];
+    const theEndPoint = environment.sportmanApiUrl + '/orders';
+    const securedEndpoints = [theEndPoint];
+    // const securedEndpoints = ['http://localhost:8080/api/orders'];
 
     if (securedEndpoints.some(url => request.urlWithParams.includes(url))) {
 
