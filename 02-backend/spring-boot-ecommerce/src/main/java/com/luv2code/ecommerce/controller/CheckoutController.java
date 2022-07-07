@@ -1,9 +1,17 @@
 package com.luv2code.ecommerce.controller;
 
+import com.luv2code.ecommerce.dto.PaymentInfo;
 import com.luv2code.ecommerce.dto.Purchase;
 import com.luv2code.ecommerce.dto.PurchaseResponse;
 import com.luv2code.ecommerce.service.CheckoutService;
-import org.springframework.web.bind.annotation.*;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 //@CrossOrigin(value = "http://localhost:4200", exposedHeaders = "Access-Control-Allow-Origin")
 @RestController
@@ -22,6 +30,16 @@ public class CheckoutController {
         PurchaseResponse purchaseResponse = checkoutService.placeOrder(purchase);
 
         return purchaseResponse;
+    }
+
+    @PostMapping("/payment-intent")
+    public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentInfo paymentInfo) throws StripeException{
+
+        PaymentIntent paymentIntent = checkoutService.createPaymentIntent(paymentInfo);
+
+        String paymentString = paymentIntent.toJson();
+
+        return new ResponseEntity<>(paymentString, HttpStatus.OK);
     }
 
 
