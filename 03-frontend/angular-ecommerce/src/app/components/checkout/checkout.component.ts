@@ -5,12 +5,14 @@ import { Router } from '@angular/router';
 import { Country } from 'src/app/common/country';
 import { Order } from 'src/app/common/order';
 import { OrderItem } from 'src/app/common/order-item';
+import { PaymentInfo } from 'src/app/common/payment-info';
 import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart.service';
 import { CheckoutService } from 'src/app/services/checkout.service';
 import { SportManShopFormService } from 'src/app/services/sport-man-shop-form.service';
 import { SportManValidators } from 'src/app/validators/sport-man-validators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -35,6 +37,14 @@ export class CheckoutComponent implements OnInit {
   //session de stockage navigateur
   storage: Storage = sessionStorage;
 
+  //initialiser l'API STRIPE
+  stripe = Stripe(environment.stripePublishableKey);
+
+  //initialser objet d'information de paiement
+  paymentInfo: PaymentInfo = new PaymentInfo();
+  cardElement: any;
+  displayError: any = "";
+
   constructor(private formBuilder: FormBuilder,
               private sportManShopFormService: SportManShopFormService  ,
               private cartService: CartService,
@@ -42,6 +52,9 @@ export class CheckoutComponent implements OnInit {
               private router: Router ) { }
 
   ngOnInit(): void {
+
+    //mise en place du formulaire de pauement stripe
+    this.setupStripePaymentForm();
 
     this.reviewCartDetails();
 
@@ -102,45 +115,45 @@ export class CheckoutComponent implements OnInit {
                                       Validators.minLength(5),
                                       SportManValidators.notOnlyWhitespace]),
       }),
-        //regle pour le formulaire de carte de credirtt
+        //regle pour le formulaire de carte de credit
       creditCard: this.formBuilder.group({
-        cardType: new FormControl('', [Validators.required]),
+        // cardType: new FormControl('', [Validators.required]),
 
-        nameOnCard: new FormControl('', [Validators.required, 
-                                         Validators.minLength(2),
-                                          SportManValidators.notOnlyWhitespace]),
+        // nameOnCard: new FormControl('', [Validators.required, 
+        //                                  Validators.minLength(2),
+        //                                   SportManValidators.notOnlyWhitespace]),
                                           
-        cardNumber: new FormControl('', [Validators.required, 
-                                         Validators.pattern('[0-9]{16}')]),          
+        // cardNumber: new FormControl('', [Validators.required, 
+        //                                  Validators.pattern('[0-9]{16}')]),          
 
-        securityCode: new FormControl('', [Validators.required, 
-          Validators.pattern('[0-9]{3}')]),
+        // securityCode: new FormControl('', [Validators.required, 
+        //   Validators.pattern('[0-9]{3}')]),
 
-        expirationMonth: [''],
+        // expirationMonth: [''],
 
-        expirationYear: [''],
+        // expirationYear: [''],
       }),
 
     });
 
     //remplir les mois actuelles
-    const startMonth: number = new Date().getMonth() +1;
-    console.log("Mois de départ:" + startMonth);
+    // const startMonth: number = new Date().getMonth() +1;
+    // console.log("Mois de départ:" + startMonth);
 
-    this.sportManShopFormService.getCreditCardMonths(startMonth).subscribe(
-      data =>{
-        console.log("mois de la carte de credit:" +JSON.stringify(data));
-        this.creditCardMonths = data;
-      }
-    );
+    // this.sportManShopFormService.getCreditCardMonths(startMonth).subscribe(
+    //   data =>{
+    //     console.log("mois de la carte de credit:" +JSON.stringify(data));
+    //     this.creditCardMonths = data;
+    //   }
+    // );
 
     //remplir les années actuelles
-    this.sportManShopFormService.getCreditCardYears().subscribe(
-      data =>{
-        console.log("année de la carte de credit récupérée: "+ JSON.stringify(data));
-        this.creditCardYears = data;
-      }
-    );
+    // this.sportManShopFormService.getCreditCardYears().subscribe(
+    //   data =>{
+    //     console.log("année de la carte de credit récupérée: "+ JSON.stringify(data));
+    //     this.creditCardYears = data;
+    //   }
+    // );
 
     //remplir les countries
     this.sportManShopFormService.getCountries().subscribe(
@@ -150,6 +163,10 @@ export class CheckoutComponent implements OnInit {
       }
     );
 
+  }
+  
+  setupStripePaymentForm() {
+    throw new Error('Method not implemented.');
   }
   reviewCartDetails() {
     
