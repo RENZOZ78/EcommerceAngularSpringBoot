@@ -164,9 +164,36 @@ export class CheckoutComponent implements OnInit {
     );
 
   }
-  
+
   setupStripePaymentForm() {
-    throw new Error('Method not implemented.');
+
+    //prendre en main les stripe elemnts
+    var elements = this.stripe.elements();
+
+    //créer un elment card.. et cacher le code postal
+    this.cardElement = elements.create('card', { hidePostalCode: true});
+
+    //Ajouter une instance du composant card UI dans le 'card-element' div
+    this.cardElement.mount('#card-element');
+
+    //Ajouter quelques liaisons d'evenements pour le 'change' dans le card-element
+    this.cardElement.on('change', (event) =>{
+
+      //gerer l'element card-errors
+      this.displayError = document.getElementById('card-errors');
+
+      if (event.complete) {
+        this.displayError.textContext = "";
+      } else if (event.error) {
+        //montrer les error de validation à personnaliser
+        this.displayError.textContent = event.error.message;
+      }
+
+
+    });
+
+
+
   }
   reviewCartDetails() {
     
