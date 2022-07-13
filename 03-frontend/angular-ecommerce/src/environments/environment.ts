@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  sportmanApiUrl:  "https://localhost:8443/api"
+  sportmanApiUrl:  "https://localhost:8443/api",
+  stripePublishableKey: "pk_test_51LIyd7KOBntp7JZnR9qm1MR9Bou3XKD9W6rghlTAjSUxQKOKxBewOPzwa5x15vEgDuqpUayd4KOmCQeEXFVzefyW00Wfc7mvTu"
 };
 
 /*
