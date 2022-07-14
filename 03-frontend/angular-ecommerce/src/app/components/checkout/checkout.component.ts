@@ -158,7 +158,7 @@ export class CheckoutComponent implements OnInit {
     //remplir les countries
     this.sportManShopFormService.getCountries().subscribe(
       data => {
-        console.log("Recupereration de toutes les countries: " + JSON.stringify(data));
+        console.log("Recuperation de toutes les countries: " + JSON.stringify(data));
         this.countries = data;
       }
     );
@@ -191,7 +191,6 @@ export class CheckoutComponent implements OnInit {
 
 
     });
-
 
 
   }
@@ -310,22 +309,67 @@ export class CheckoutComponent implements OnInit {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
+    //calculer in fo de paiement
+    this.paymentInfo.amount = this.totalPrice * 100;
+    this.paymentInfo.currency = "EUR";
+
     //appeler REST API a partir des données qu'on a collecté, via CheckoutService
-    this.checkoutService.placeOrder(purchase).subscribe(
-      {
-        next: response =>{
-          alert(`Votre commande a été reçu.\n Numero de commande: ${response.orderTrackingNumber}`);
+    // this.checkoutService.placeOrder(purchase).subscribe(
+    //   {
+    //     next: response =>{
+    //       alert(`Votre commande a été reçu.\n Numero de commande: ${response.orderTrackingNumber}`);
           
-          // reinitialiser le panier, une fois que la commande est faite
-          this.resetCart();
+    //       // reinitialiser le panier, une fois que la commande est faite
+    //       this.resetCart();
 
-        },
-        error: err =>{
-          alert(`il y a une erreur: ${err.message}`);
-        }
+    //     },
+    //     error: err =>{
+    //       alert(`il y a une erreur: ${err.message}`);
+    //     }
+    //   }
+    // );
+
+    //New methode pour enoyer les infos, payer et lancer la commande---------------------------------
+
+      //si le formulaire est valide alors
+      if (!this.checkoutFormGroup.invalid && this.displayError.textContent === "") {
+        //creer un payemnt intent
+        this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
+        
+        //confirmer le paiement par carte
+        (payementIntentResponse) => {
+          this.stripe.confirmCardPayment(payementIntentResponse.client_secret,
+            {
+              payment_method: {
+                card: this.cardElement
+              }
+            }, {handleActions: false})
+          .then(function(result){
+            if (result.error) {
+              //s'il ya une error , informer le client
+              alert(`Il y a une erreur: ${result.error.message}`);
+            } else{
+              //appel REST API via le checkoutService
+              this.checkoutService.placeOrder(purchase).subscribe({
+                next: response => {
+                  alert(`Votre commande à été recu.\nOrder  tracking number: ${response.orderTrackingNumber}`);
+
+                  // reset panier
+                  this.resetCart();
+                },
+                error : err => {
+                  alert(`Il y a uen erreur: ${err.message}`);
+                }
+              })
+
+            }
+          }.bind(this))
+        }   
+        );
+      }else{
+        this.checkoutFormGroup.markAllAsTouched();
+        return;
       }
-    );
-
 
     // console.log(this.checkoutFormGroup.get('customer').value);
     // console.log( "l'amail est: "+this.checkoutFormGroup.get('customer').value.email);
@@ -335,7 +379,7 @@ export class CheckoutComponent implements OnInit {
 
   }
 
-  //reinitialiser le panier-------------------------
+  //reinitialiser le panier----------------------------------------------
   resetCart() {
     //reinitialiser les donnés du panier
     //this.checkoutFormGroup.reset();
