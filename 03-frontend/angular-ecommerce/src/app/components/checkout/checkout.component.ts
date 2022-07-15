@@ -284,8 +284,7 @@ export class CheckoutComponent implements OnInit {
       let orderItems: OrderItem[] = cartItems.map(tempCartItem => new OrderItem(tempCartItem));
 
     //lancer l'achat (purchase)=creer une instance de purchase
-    let purchase = new Purchase();
-    
+    let purchase = new Purchase();    
 
     //remplir client-purchase
     purchase.customer = this.checkoutFormGroup.controls['customer'].value;
@@ -296,7 +295,6 @@ export class CheckoutComponent implements OnInit {
     const shippingCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress.country));
     purchase.shippingAddress.state = shippingState.name;
     purchase.shippingAddress.country = shippingCountry.name;
-
 
     //remplir adresse de facturation purchase
     purchase.billingAddress = this.checkoutFormGroup.controls['shippingAddress'].value;
@@ -309,9 +307,11 @@ export class CheckoutComponent implements OnInit {
     purchase.order = order;
     purchase.orderItems = orderItems;
 
-    //calculer in fo de paiement
-    this.paymentInfo.amount = this.totalPrice * 100;
+    //calculer info de paiement
+    this.paymentInfo.amount = Math.round(this.totalPrice * 100);
     this.paymentInfo.currency = "EUR";
+
+    console.log(`this.paymentInfo.amount: ${this.paymentInfo.amount}`);
 
     //appeler REST API a partir des données qu'on a collecté, via CheckoutService
     // this.checkoutService.placeOrder(purchase).subscribe(
