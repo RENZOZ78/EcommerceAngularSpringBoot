@@ -45,6 +45,8 @@ export class CheckoutComponent implements OnInit {
   cardElement: any;
   displayError: any = "";
 
+  isDisabled: boolean = false;
+
   constructor(private formBuilder: FormBuilder,
               private sportManShopFormService: SportManShopFormService  ,
               private cartService: CartService,
@@ -329,10 +331,13 @@ export class CheckoutComponent implements OnInit {
     //   }
     // );
 
-    //New methode pour enoyer les infos, payer et lancer la commande---------------------------------
+    //New methode pour envoyer les infos, appeler l'API, payer et lancer la commande---------------------------------
 
       //si le formulaire est valide alors
       if (!this.checkoutFormGroup.invalid && this.displayError.textContent === "") {
+
+        this.isDisabled = true;
+
         //creer un payemnt intent
         this.checkoutService.createPaymentIntent(this.paymentInfo).subscribe(
         
@@ -360,17 +365,21 @@ export class CheckoutComponent implements OnInit {
             if (result.error) {
               //s'il ya une error , informer le client
               alert(`Il y a une erreur: ${result.error.message}`);
+              this.isDisabled = false;
+
             } else{
               //appel REST API via le checkoutService
               this.checkoutService.placeOrder(purchase).subscribe({
                 next: response => {
                   alert(`Votre commande à été recu.\nOrder  tracking number: ${response.orderTrackingNumber}`);
-
+                  
                   // reset panier
                   this.resetCart();
+                  this.isDisabled = false;
                 },
                 error : err => {
                   alert(`Il y a uen erreur: ${err.message}`);
+                  this.isDisabled = false;
                 }
               })
 
